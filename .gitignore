@@ -1,0 +1,4 @@
+node_modules/
+.DS_Store
+# recordings and credentials files: they show org data
+.local/
