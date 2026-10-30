@@ -5,6 +5,7 @@ My custom Claude Code skills.
 | Skill | What it does |
 | --- | --- |
 | [recording-agentforce-conversations](skills/recording-agentforce-conversations/SKILL.md) | Plays scripted Agentforce conversations in a real browser and records screenshots, an MP4, a GIF and a transcript |
+| [yolo-mode](skills/yolo-mode/README.md) | Runs work unattended (usually overnight): every question asked up front, computer kept awake, per-project rules, report at the end |
 
 ## Install
 

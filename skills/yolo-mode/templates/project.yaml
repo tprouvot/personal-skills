@@ -1,0 +1,55 @@
+# YOLO mode rules for this project. Lives in <project root>/.yolo-mode.yaml. The yolo-mode skill reads it before
+# every unattended run, whichever agent runs it. Anything not allowed here is off-limits during a run. Edit freely. The agent changes this file only while
+# you're there (setup or a brief), never during a run.
+version: 1
+
+project:
+  name: my-project
+  summary: One line on what the project is.
+
+git:
+  base_branch: main
+  run_branch: yolo/{date}-{topic}          # each run works on its own branch
+  allowed: [commit, push_branch, open_pr]  # also possible: merge_pr, push_base, tag, release
+  never: [force_push, push_base, merge_pr, rewrite_history]
+  notes: Merging into main deploys production.
+
+# Everything outside the repo that the agent could change: orgs, clusters, cloud accounts, databases, sites.
+# access: read | write | destructive (write plus deletes, drops, deactivations). Unlisted = off-limits.
+environments:
+  - name: staging
+    kind: kubernetes-context
+    access: write
+  - name: production
+    kind: kubernetes-context
+    access: read
+
+# Actions other people can see (messages, publishing, shared documents, tickets).
+outward:
+  allowed: []
+  forbidden: [post_in_channels, email_others, publish_release]
+
+on_blocked: decide   # overrides the profile default for this project
+
+# The project's quality bar. A task is done only when these hold.
+definition_of_done:
+  - Tests for the changed code pass (npm test).
+  - Lint is clean (npm run lint).
+  - Docs describing the changed behaviour are updated.
+
+# Checks before activation. Each must pass, or the user hears why before leaving.
+preflight:
+  - run: gh auth status
+    why: push the run branch and open the PR
+
+# Kinds of work the agent may do alone. New kinds are settled with you during the brief, then added here.
+tasks:
+  - id: fix-failing-tests
+    what: Find and fix the cause of failing tests.
+    allowed: true
+    environments: []
+    limits:
+      - Never weaken, skip or delete a test to make it pass.
+    verify:
+      - npm test
+    undo: Revert the run branch commits.

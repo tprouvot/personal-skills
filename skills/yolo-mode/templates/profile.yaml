@@ -1,0 +1,24 @@
+# YOLO mode profile: the person and the machine. Lives in ${XDG_CONFIG_HOME:-~/.config}/yolo-mode/profile.yaml.
+# The yolo-mode skill reads it before every unattended run, whichever agent runs it.
+# Edit freely. The agent changes it only while you're there (setup or a brief), never during a run.
+version: 1
+
+keep_awake:
+  enabled: true
+  max_hours: 14           # safety cap in case the session hangs; a weekend run needs more
+  require_ac_power: true  # warn before activation when the laptop is on battery
+  agent_names: ""         # empty = the built-in list (claude codex gemini opencode ...); else e.g. "myagent"
+
+# How the end-of-run report reaches you.
+notify:
+  channel: none   # slack-dm | email | desktop | command | none
+  to: ""          # Slack user ID, email address...
+  command: ""     # for channel: command, gets the report on stdin, e.g. curl -s -T - ntfy.sh/<your-topic>
+
+# Rules for every project. A project file can add limits but can't loosen these.
+standing_rules:
+  - Never install software to keep the machine awake or to get around security tools.
+  - Never send messages to anyone but me.
+
+defaults:
+  on_blocked: decide   # decide (pick, log, go on) | skip (leave it, do the rest) | stop (report and end)
